@@ -17,7 +17,7 @@ const Workspace = () => {
       <Lighting />
       <Desk />
       {/* <Laptop ref={laptopRef} position={[0, 0.5, 0]} /> */}
-      <Keyboard ref={keyboardRef} position={[0, -0.3, 0.5]} />
+      <Keyboard ref={keyboardRef} position={[0, -0.36, 0.5]} />
       {/* <PhotoFrame ref={photoFrameRef} position={[-1.5, 0.4, -0.2]} /> */}
     </>
   );
