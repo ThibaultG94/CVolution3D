@@ -1,16 +1,21 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-import Loading from "./components/ui/Loading";
-import Controls from "./components/ui/Controls";
+import { useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import Workspace from "./components/workspace/Workspace";
 import { OrbitControls } from "@react-three/drei";
+import Workspace from "./components/workspace/Workspace";
+import Controls from "./components/ui/Controls";
+import Loading from "./components/ui/Loading";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simuler un temps de chargement
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="app">
