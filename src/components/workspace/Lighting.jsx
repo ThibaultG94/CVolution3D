@@ -2,7 +2,7 @@ const Lighting = () => {
   return (
     <>
       {/* Ambient light */}
-      <ambientLight intensity={5} />
+      <ambientLight intensity={2.5} />
 
       {/* Main light */}
       <directionalLight
@@ -22,11 +22,24 @@ const Lighting = () => {
       {/* More powerful front light */}
       <directionalLight position={[0, 2, 8]} intensity={1} />
 
-      {/* Accent light for screen */}
+      {/* Light from other side to soften shadows */}
+      <directionalLight position={[-5, 6, -2]} intensity={0.4} />
+
+      {/* Accent light for laptop screen */}
+      <spotLight
+        position={[0, 3, 2]}
+        angle={0.3}
+        penumbra={0.7}
+        intensity={1.5}
+        color="#ffffff"
+        distance={8}
+      />
+
+      {/* Accent light for keyboard */}
       <pointLight
-        position={[0, 1, 0]}
+        position={[0, 1, 1]}
         color="#61dafb"
-        intensity={0.8}
+        intensity={0.4}
         distance={3}
       />
     </>

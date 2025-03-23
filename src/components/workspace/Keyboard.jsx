@@ -10,7 +10,7 @@ const Keyboard = forwardRef(({ position }, ref) => {
   const [pressedKey, setPressedKey] = useState(null);
 
   // Keyboard tilt
-  const keyboardRotation = Math.PI / 15;
+  const keyboardRotation = 0;
 
   const keySpacingX = 0.11; // Horizontal space between keys
 
@@ -36,11 +36,11 @@ const Keyboard = forwardRef(({ position }, ref) => {
   useFrame(() => {
     if (hoveredKey && keysRef.current[hoveredKey]) {
       keysRef.current[hoveredKey].position.y =
-        0.06 + Math.sin(Date.now() * 0.005) * 0.001;
+        0.01 + Math.sin(Date.now() * 0.005) * 0.001;
     }
 
     if (pressedKey && keysRef.current[pressedKey]) {
-      keysRef.current[pressedKey].position.y = 0.04;
+      keysRef.current[pressedKey].position.y = -0.01;
     }
   });
 
@@ -124,7 +124,7 @@ const Keyboard = forwardRef(({ position }, ref) => {
     >
       {/* Keyboard base */}
       <mesh castShadow receiveShadow>
-        <boxGeometry args={[1.3, 0.1, 0.7]} />
+        <boxGeometry args={[1.3, 0.001, 0.7]} />
         <meshPhongMaterial
           color={0x344055}
           specular={0x444444}
@@ -137,7 +137,7 @@ const Keyboard = forwardRef(({ position }, ref) => {
         <Key
           key={`tech_${key}`}
           x={-0.4 + index * keySpacingX}
-          y={0.06}
+          y={0.01}
           z={-0.25}
           label={key}
           color={keyColors[key]}
@@ -149,7 +149,7 @@ const Keyboard = forwardRef(({ position }, ref) => {
         <Key
           key={`num_${key}`}
           x={-0.55 + index * keySpacingX}
-          y={0.06}
+          y={0.01}
           z={-0.14}
           label={key}
         />
@@ -160,7 +160,7 @@ const Keyboard = forwardRef(({ position }, ref) => {
         <Key
           key={`row1_${key}`}
           x={-0.5 + index * keySpacingX}
-          y={0.06}
+          y={0.01}
           z={-0.03}
           label={key}
         />
@@ -171,7 +171,7 @@ const Keyboard = forwardRef(({ position }, ref) => {
         <Key
           key={`row2_${key}`}
           x={-0.45 + index * keySpacingX}
-          y={0.06}
+          y={0.01}
           z={0.08}
           label={key}
         />
@@ -182,14 +182,14 @@ const Keyboard = forwardRef(({ position }, ref) => {
         <Key
           key={`row3_${key}`}
           x={-0.4 + index * keySpacingX}
-          y={0.06}
+          y={0.01}
           z={0.19}
           label={key}
         />
       ))}
 
       {/* Space bar - positioned in the center and on the bayse */}
-      <Key x={0} y={0.06} z={0.3} label=" " width={0.8} depth={0.08} />
+      <Key x={0} y={0.01} z={0.3} label=" " width={0.8} depth={0.08} />
     </group>
   );
 });
