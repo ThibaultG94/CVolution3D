@@ -9,7 +9,10 @@ const Keyboard = forwardRef(({ position }, ref) => {
   const [hoveredKey, setHoveredKey] = useState(null);
   const [pressedKey, setPressedKey] = useState(null);
 
-  const keyboardRotation = Math.PI / 24;
+  // Keyboard tilt
+  const keyboardRotation = Math.PI / 15;
+
+  const keySpacingX = 0.11; // Horizontal space between keys
 
   useEffect(() => {
     if (ref) {
@@ -17,6 +20,7 @@ const Keyboard = forwardRef(({ position }, ref) => {
     }
   }, [ref]);
 
+  // Setting special key colors
   const keyColors = {
     H: 0xe34c26, // HTML
     C: 0x264de4, // CSS
@@ -28,6 +32,7 @@ const Keyboard = forwardRef(({ position }, ref) => {
     VS: 0x007acc, // VS Code
   };
 
+  // More subtle hover animation
   useFrame(() => {
     if (hoveredKey && keysRef.current[hoveredKey]) {
       keysRef.current[hoveredKey].position.y =
@@ -46,8 +51,8 @@ const Keyboard = forwardRef(({ position }, ref) => {
     z,
     label,
     color = 0x454e5f,
-    width = 0.12,
-    depth = 0.12,
+    width = 0.1,
+    depth = 0.1,
   }) => {
     const keyRef = useRef();
     const keyId = `${label}_${x}_${y}_${z}`;
@@ -61,7 +66,6 @@ const Keyboard = forwardRef(({ position }, ref) => {
     const isSpecialKey = label in keyColors;
     const keyColor = isSpecialKey ? keyColors[label] : color;
 
-    // Add space between keys
     return (
       <group
         ref={keyRef}
@@ -72,7 +76,7 @@ const Keyboard = forwardRef(({ position }, ref) => {
         onPointerUp={() => setPressedKey(null)}
       >
         <mesh castShadow>
-          <boxGeometry args={[width * 0.9, 0.03, depth * 0.9]} />
+          <boxGeometry args={[width * 0.93, 0.03, depth * 0.93]} />
           <meshPhongMaterial
             color={keyColor}
             specular={0x222222}
@@ -82,8 +86,8 @@ const Keyboard = forwardRef(({ position }, ref) => {
 
         {/* Key text */}
         {label && label !== " " && (
-          <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[width * 0.7, depth * 0.7]} />
+          <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[width * 0.8, depth * 0.8]} />
             <meshBasicMaterial transparent>
               <canvasTexture
                 attach="map"
@@ -103,9 +107,8 @@ const Keyboard = forwardRef(({ position }, ref) => {
     canvas.height = 64;
     const ctx = canvas.getContext("2d");
 
-    // Different text colors for different keys
     ctx.fillStyle = isSpecial ? "black" : "white";
-    ctx.font = "bold 36px Arial";
+    ctx.font = "bold 30px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(text, 32, 32);
@@ -116,13 +119,12 @@ const Keyboard = forwardRef(({ position }, ref) => {
   return (
     <group
       ref={groupRef}
-      // Position adjusted to align correctly with the table
       position={[position[0], position[1] + 0.05, position[2]]}
       rotation={[keyboardRotation, 0, 0]}
     >
       {/* Keyboard base */}
       <mesh castShadow receiveShadow>
-        <boxGeometry args={[2.0, 0.1, 0.9]} />
+        <boxGeometry args={[1.3, 0.1, 0.7]} />
         <meshPhongMaterial
           color={0x344055}
           specular={0x444444}
@@ -130,45 +132,64 @@ const Keyboard = forwardRef(({ position }, ref) => {
         />
       </mesh>
 
-      {/* Front row - Technology keys with extra spacing */}
+      {/* Front row - Technology keys */}
       {["H", "C", "JS", "R", "TW", "N", "G", "VS"].map((key, index) => (
         <Key
           key={`tech_${key}`}
-          x={-0.79 + index * 0.23}
+          x={-0.4 + index * keySpacingX}
           y={0.06}
-          z={-0.32}
+          z={-0.25}
           label={key}
           color={keyColors[key]}
         />
       ))}
 
-      {[
-        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-        ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-        ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
-        ["Z", "X", "C", "V", "B", "N", "M"],
-      ].map((row, rowIndex) => (
-        <group key={`row_${rowIndex}`}>
-          {row.map((key, keyIndex) => {
-            const offset = rowIndex * 0.03; // Offset for QWERTY effect
-            const x = -0.8 + offset + keyIndex * 0.19;
-            const z = -0.15 + rowIndex * 0.16;
-
-            return (
-              <Key
-                key={`std_${key}_${rowIndex}_${keyIndex}`}
-                x={x}
-                y={0.06}
-                z={z}
-                label={key}
-              />
-            );
-          })}
-        </group>
+      {/* AZERTY - first row of digits */}
+      {["&", "é", '"', "'", "(", "-", "è", "_", "ç", "à"].map((key, index) => (
+        <Key
+          key={`num_${key}`}
+          x={-0.55 + index * keySpacingX}
+          y={0.06}
+          z={-0.14}
+          label={key}
+        />
       ))}
 
-      {/* Space bar */}
-      <Key x={0} y={0.06} z={0.5} label=" " width={1.2} depth={0.15} />
+      {/* AZERTY - second row */}
+      {["A", "Z", "E", "R", "T", "Y", "U", "I", "O", "P"].map((key, index) => (
+        <Key
+          key={`row1_${key}`}
+          x={-0.5 + index * keySpacingX}
+          y={0.06}
+          z={-0.03}
+          label={key}
+        />
+      ))}
+
+      {/* AZERTY - third row */}
+      {["Q", "S", "D", "F", "G", "H", "J", "K", "L", "M"].map((key, index) => (
+        <Key
+          key={`row2_${key}`}
+          x={-0.45 + index * keySpacingX}
+          y={0.06}
+          z={0.08}
+          label={key}
+        />
+      ))}
+
+      {/* AZERTY - fourth row */}
+      {["W", "X", "C", "V", "B", "N", ",", ";", ":", "!"].map((key, index) => (
+        <Key
+          key={`row3_${key}`}
+          x={-0.4 + index * keySpacingX}
+          y={0.06}
+          z={0.19}
+          label={key}
+        />
+      ))}
+
+      {/* Space bar - positioned in the center and on the bayse */}
+      <Key x={0} y={0.06} z={0.3} label=" " width={0.8} depth={0.08} />
     </group>
   );
 });
